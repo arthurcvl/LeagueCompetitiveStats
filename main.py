@@ -1,16 +1,19 @@
 import numpy
 
+try:
+    from lck import *
+    from lpl import *
+    from lec import *
+    from lcs import *
+except Exception as e:
+    print(e)
 
-from lck import *
-from lcs import *
-from lec import *
-from lpl import *
-def ler_arquivo_csv():
-    jogos = []
-    with open("2024_LoL_esports_match_data_from_OraclesElixir (1).csv", "r", encoding="utf-8") as arquivo:
-        linhas = arquivo.readlines()
+def read_csv_file():
+    games = []
+    with open("2024_LoL_esports_match_data_from_OraclesElixir.csv", "r", encoding="utf-8") as file:
+        linhas = file.readlines()
         for linha in linhas:
-            jogo = linha.strip().split(",")
+            game = linha.strip().split(",")
             indices = [1, 2, 4, 10, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 30, 31, 32, 35, 36,
                        37, 38, 39, 40, 41, 42, 45, 50, 51, 52, 53, 54, 55, 57, 59, 60, 61, 62, 63, 70, 71, 72, 73, 76,
                        77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100,
@@ -19,10 +22,10 @@ def ler_arquivo_csv():
 
             indices.sort(reverse=True)
             for indice in indices:
-                jogo.pop(indice)
+                game.pop(indice)
 
-            jogos.append(jogo)
-    return jogos
+            games.append(game)
+    return games
 
 def itens():
     pqp = ["gameid","datacompleteness","url","league","year","split","playoffs","date","game","patch","participantid",
@@ -269,7 +272,7 @@ def menu():
 
 
 def atualizar_dados():
-    data = ler_arquivo_csv()
+    data = read_csv_file()
     for liga in LCK, LPL, LEC, LCS:
         for time in liga:
             adicionar_dados(data, time)
@@ -317,7 +320,7 @@ def function_retardad(data, gameid):
     return lista
 
 def adicionar_adversario():
-    data = ler_arquivo_csv()
+    data = read_csv_file()
     lista = []
     for jogo in data:
         if jogo[0] not in lista and jogo[0] != "gameid":
