@@ -11,8 +11,6 @@ IMT = {"name": "Immortals"}
 
 
 
-
-
 LCS = [FLY, HUNDRET, C9, TL, DIG, NRG, SR, IMT]
-print(chr(0x2665))
+
 

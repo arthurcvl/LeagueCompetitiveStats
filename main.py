@@ -26,7 +26,7 @@ def read_csv_file():
             games.append(game)
     return games
 
-def items():
+def list_game_stats():
     stat = ["gameid","datacompleteness","url","league","year","split","playoffs","date","game","patch","participantid",
            "side","position",'playername',"playerid","teamname","teamid","champion","ban1","ban2","ban3","ban4","ban5",
            "pick1","pick2","pick3","pick4","pick5","gamelength","result","kills","deaths","assists","teamkills",
@@ -103,6 +103,7 @@ def average(data, stat):
                 data[game][stat]
             except:
                 print("Stat: {} not found!".format(stat))
+                marker()
                 return None
     average = []
     for game in data:
@@ -146,6 +147,7 @@ def relative_frequency(team, stat, lines, overunder):
                 team[game][stat]
             except:
                 print("Stat: {} not found!".format(stat))
+                marker()
                 return None
     if overunder == "under" or overunder == "over":
         l = lines.split(" ")
@@ -153,22 +155,23 @@ def relative_frequency(team, stat, lines, overunder):
             try:
                 float(line)
             except ValueError:
-                print("Please only type numbers in lines of relative frequency")
+                print("Please type the numbers of relative frequency")
+                marker()
                 return None
             games = []
-            correct = []
+            relfrequency = []
             patchs = []
             frequency = []
             if stat == "Time":
                 minute, second = divmod(line, 60) 
             for game in team:
-                    if jogo != "name":
-                        if overunder == "over":
-                            if team[game][stat] > line:
-                                frequency.append(team[game][stat])
-                        elif overunder == "under":
-                            if team[game][stat] < line:
-                                frequency.append(team[game][stat])
+                if game != "name":
+                    if overunder == "over":
+                        if team[game][stat] > line:
+                            frequency.append(team[game][stat])
+                    elif overunder == "under":
+                        if team[game][stat] < line:
+                            frequency.append(team[game][stat])
                         percentage = round((len(frequency) / (len(team) - 1)) * 100, 1)
             if stat == "Time":
                 print("{} ({}:{}) - {}% of {} relative frequency \n".format(team["name"], int(minute), int(second), percentage, stat))
@@ -186,26 +189,27 @@ def relative_frequency(team, stat, lines, overunder):
                     if game != "name":
                         if overunder == "over":
                             if team[game]["Patch"] == patch and team[game][stat] > line:
-                                correct.append(team[game][stat])
+                                relfrequency.append(team[game][stat])
                         elif overunder == "under":
                             if team[game]["Patch"] == patch and team[game][stat] < line:
-                                correct.append(team[game][stat])
-                if len(correct) > 0:
-                    print("Patch {} - ({}) games - {}%".format(patch, games.count(patch),round((len(correct) / games.count(patch) * 100), 1)))
-                elif len(correct) == 0:
+                                relfrequency.append(team[game][stat])
+                if len(relfrequency) > 0:
+                    print("Patch {} - ({}) games - {}%".format(patch, games.count(patch),round((len(relfrequency) / games.count(patch) * 100), 1)))
+                elif len(relfrequency) == 0:
                     print("Patch {} - ({}) games - {}%".format(patch, games.count(patch),0))
 
-                correct.clear()
+                relfrequency.clear()
             marker()
     else:
         print("Please type if its over or under! ")
+        marker()
 
              
 
 def interface():
     print("Type 1 to see what informations we are getting from each game")
     print("Type 2 to see teams name (atm you will need to type the full name to get data)")
-    print("Type 3 to get the average from a team stat (tower, dragon, time, kills)")
+    print("Type 3 to get the average from a team stat (Tower, Dragon, Time, Kill)")
     print("Type 4 to get the relative frequency of a team stat")
     print("Type 0 to close the program (or Ctrl + C)")
     marker()
@@ -234,72 +238,90 @@ def get_team_stat():
 
     return team, team2, stat
 
+def searchteam(teamname):
+    for league in LCK, LPL, LEC, LCS:
+        for squad in league:
+            if teamname == squad["name"]:
+                return squad
+
 def marker():
     print("----------------------------------------------------------------")
 
 if __name__ == "__main__":
+    print("Loading...")
     update_data()
+    marker()
     while True:
         interface()
         choice = input("Type here: ")
         marker()
         if choice == "1":
-            items()
+            list_game_stats()
             marker()
+        
         elif choice == "2":   
-            mostrar_times_liga()
+            show_teams()
+        
         elif choice == "3":
             team, team2, stat = get_team_stat()
             marker()
-            for league in LCK, LPL, LEC, LCS:
-                for squad in league:
-                    if team == squad["name"]:
-                        average(squad, stat)
-                        marker()
+            squad = searchteam(team)
+            if squad:    
+                average(squad, stat)
+                marker()
+            else:
+                print("Team not found")
+                marker()
             if team2:
-                for league in LCK, LPL, LEC, LCS:
-                    for squad in league:
-                        if team2 == squad["name"]:
-                            average(squad, stat)
-                            marker()
-
+                squad2 = searchteam(team2)
+                if squad2:
+                    average(squad2, stat)
+                    marker()
+                else:
+                    print("Team not found")
+                    marker() 
+                
         elif choice == "4":
             team, team2, stat = get_team_stat()
             underover = input("under or over: ")
             line = input("Type the number you wanna compare: ")
             marker()
-            linetime = ""
-            numerator = 1
-            if stat == "Time":
-                time = line.split(" ")
-                for minute in time:
-                    time1 = minute.split(":")
-                    second = (int(time1[0]) * 60) + int(time1[1])
-                    if numerator < len(time):
-                        linetime = linetime + str(second) + " "
-                        numerator += 1
-                    else:
-                        linetime = linetime + str(second)
-            for league in LCK, LPL, LEC, LCS:
-                for squad in league:
-                    if team == squad["name"]:
-                        if stat == "Time":
-                            relative_frequency(squad, stat, linetime, underover)
+            starternumber = 1
+            squad = searchteam(team)
+            if not squad:
+                print("Team not found")
+                marker()
+            squad2 = searchteam(team2)
+            if not squad2:
+                if squad2 != "" and squad2 != None and squad2 != False:
+                    print("Team not found")
+                    marker()
+            if squad or squad2:
+                if stat == "Time":
+                    seconds = ""
+                    time = line.split(" ")
+                    for minute in time:
+                        time1 = minute.split(":")
+                        second = (int(time1[0]) * 60) + int(time1[1])
+                        if starternumber < len(time):
+                            seconds = seconds + str(second) + " "
+                            starternumber += 1
                         else:
-                            relative_frequency(squad, stat, line, underover)
-            if team2:
-                for league in LCK, LPL, LEC, LCS:
-                    for squad in league:
-                        if team2 == squad["name"]:
-                            if stat == "Time":
-                                relative_frequency(squad, stat, linetime, underover)
-                            else:
-                                relative_frequency(squad, stat, line, underover)
-                                
+                            seconds = seconds + str(second)    
+                    if squad:
+                        relative_frequency(squad, stat, seconds, underover)
+                    if squad2:
+                        relative_frequency(squad2, stat, seconds, underover)
+                else:        
+                    if squad:    
+                        relative_frequency(squad, stat, line, underover)
+                    if squad2:
+                        relative_frequency(squad2, stat, line, underover)
 
         elif choice == "0":
             print(f"Closing... Goodbye {chr(0x2665)}")
             break
+        
         else:
             print("Invalid choice!")
             marker()
