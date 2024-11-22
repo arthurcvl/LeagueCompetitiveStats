@@ -1,9 +1,9 @@
 
 
-GENG = {"name": "Gen.G eSports"}
+GENG = {"name": "Gen.G"}
 T1 = {"name": "T1"}
 KDF = {"name": "Kwangdong Freecs"}
-HLE = {"name": "Hanwha Life eSports"}
+HLE = {"name": "Hanwha Life Esports"}
 KT = {"name": "KT Rolster"}
 DK = {"name": "Dplus KIA"}
 NS = {"name": "Nongshim RedForce"}
