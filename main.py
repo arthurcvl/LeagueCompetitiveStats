@@ -86,52 +86,15 @@ def add_data(stats, team):
                 "Side": game[7],
                 "Data": game[4],
                 "Time": int(game[9]),
-                "Resultado": game[10],
-                "Kills": kills,
-                "Dragoes": dragons,
-                "Baroes": barons,
-                "Torres": towers,
-                "Inibidores": inhibitors,
+                "Winner": game[10],
+                "Kill": kills,
+                "Dragon": dragons,
+                "Baron": barons,
+                "Tower": towers,
+                "Inhibitors": inhibitors,
 
             }
 
-
-def poison(time, dado, lines, overunder):
-    if lines:
-        for jogo in time:
-            if jogo != "name":
-                try:
-                    time[jogo][dado]
-                except:
-                    print("Dado: {} não encontrado!".format(dado))
-                    return None
-        if overunder == "over" or overunder == "under":
-            linhas = lines.split(" ")
-            for linha in linhas:
-                try:
-                    linha = float(linha)
-                except ValueError:
-                    print("Por favor digite apenas numeros nas linhas")
-                    return None
-                corretos = []
-                for jogo in time:
-                    if jogo != "name":
-                        if overunder == "over":
-                            if time[jogo][dado] > linha:
-                                corretos.append(time[jogo][dado])
-                        elif overunder == "under":
-                            if time[jogo][dado] < linha:
-                                corretos.append(time[jogo][dado])
-                porcentagem = round((len(corretos) / (len(time) - 1)) * 100, 1)
-                if dado == "Tempo":
-                    minutos, segundos = divmod(linha, 60)
-                    print("{} ({}:{}) {} - {}%".format(time["name"], int(minutos), int(segundos), dado, porcentagem))
-                else:
-                    print("{} ({}) {} - {}%".format(time["name"], linha, dado, porcentagem))
-        else:
-            print("Por favor digite se é Over ou Under!")
-    else:
-        return None
 
 def average(data, stat):
     for game in data:
@@ -141,7 +104,6 @@ def average(data, stat):
             except:
                 print("Stat: {} not found!".format(stat))
                 return None
-    
     average = []
     for game in data:
         if game != "name":
@@ -177,56 +139,70 @@ def average(data, stat):
             index.clear()
 
 
-def poison_patch(time, dado, lines, overunder):
-    for jogo in time:
-        if jogo != "name":
+def relative_frequency(team, stat, lines, overunder):
+    for game in team:
+        if game != "name":
             try:
-                time[jogo][dado]
+                team[game][stat]
             except:
-                print("Dado: {} não encontrado!".format(dado))
+                print("Stat: {} not found!".format(stat))
                 return None
     if overunder == "under" or overunder == "over":
-        linhas = lines.split(" ")
-        for linha in linhas:
+        l = lines.split(" ")
+        for line in l:      
             try:
-                linha = float(linha)
+                float(line)
             except ValueError:
-                print("Por favor digite apenas numeros nas linhas")
+                print("Please only type numbers in lines of relative frequency")
                 return None
-            jogos = []
-            corretos = []
+            games = []
+            correct = []
             patchs = []
-            for jogo in time:
-                if jogo != "name":
-                    if time[jogo]["Patch"]:
-                        if time[jogo]["Patch"] not in patchs:
-                            patchs.append(time[jogo]["Patch"])
-                        jogos.append(time[jogo]["Patch"])
-            if dado == "Tempo":
-                minutos, segundos = divmod(linha, 60)
-                print("{} - {}:{} : ".format(time["name"], int(minutos), int(segundos)))
-            else:
-                print("{} - {}: ".format(time["name"], linha))
-            for patch in patchs:
-                for jogo in time:
+            frequency = []
+            if stat == "Time":
+                minute, second = divmod(line, 60) 
+            for game in team:
                     if jogo != "name":
                         if overunder == "over":
-                            if time[jogo]["Patch"] == patch and time[jogo][dado] > linha:
-                                corretos.append(time[jogo][dado])
+                            if team[game][stat] > line:
+                                frequency.append(team[game][stat])
                         elif overunder == "under":
-                            if time[jogo]["Patch"] == patch and time[jogo][dado] < linha:
-                                corretos.append(time[jogo][dado])
-                if len(corretos) > 0:
-                    print("Patch {} - ({}) jogos - {} - {}% Poison".format(patch, jogos.count(patch), dado, round((len(corretos) / jogos.count(patch) * 100), 1)))
-                elif len(corretos) == 0:
-                    print("Patch {} - ({}) jogos - {} - {}% Poison".format(patch, jogos.count(patch), dado, 0))
+                            if team[game][stat] < line:
+                                frequency.append(team[game][stat])
+                        percentage = round((len(frequency) / (len(team) - 1)) * 100, 1)
+            if stat == "Time":
+                print("{} ({}:{}) - {}% of {} relative frequency \n".format(team["name"], int(minute), int(second), percentage, stat))
+            else:
+                print("{} ({}) {} - {}% of relative frequency".format(team["name"], line, stat, percentage))
+            
+            for game in team:
+                if game != "name":
+                    if team[game]["Patch"]:
+                        if team[game]["Patch"] not in patchs:
+                            patchs.append(team[game]["Patch"])
+                        games.append(team[game]["Patch"])
+            for patch in patchs:
+                for game in team:
+                    if game != "name":
+                        if overunder == "over":
+                            if team[game]["Patch"] == patch and team[game][stat] > line:
+                                correct.append(team[game][stat])
+                        elif overunder == "under":
+                            if team[game]["Patch"] == patch and team[game][stat] < line:
+                                correct.append(team[game][stat])
+                if len(correct) > 0:
+                    print("Patch {} - ({}) games - {}%".format(patch, games.count(patch),round((len(correct) / games.count(patch) * 100), 1)))
+                elif len(correct) == 0:
+                    print("Patch {} - ({}) games - {}%".format(patch, games.count(patch),0))
 
-                corretos.clear()
+                correct.clear()
             marker()
     else:
         print("Please type if its over or under! ")
 
-def menu():
+             
+
+def interface():
     print("Type 1 to see what informations we are getting from each game")
     print("Type 2 to see teams name (atm you will need to type the full name to get data)")
     print("Type 3 to get the average from a team stat (tower, dragon, time, kills)")
@@ -235,13 +211,13 @@ def menu():
     marker()
 
 
-def atualizar_dados():
+def update_data():
     data = read_csv_file()
-    for liga in LCK, LPL, LEC, LCS:
-        for time in liga:
-            add_data(data, time)
+    for league in LCK, LPL, LEC, LCS:
+        for team in league:
+            add_data(data, team)
 
-def mostrar_times_liga():
+def show_teams():
     leagues = ["LCK", "LPL", "LEC", "LCS"]
     print("Currently teams: ")
     for league in LCK, LPL, LEC, LCS:
@@ -262,9 +238,9 @@ def marker():
     print("----------------------------------------------------------------")
 
 if __name__ == "__main__":
-    atualizar_dados()
+    update_data()
     while True:
-        menu()
+        interface()
         choice = input("Type here: ")
         marker()
         if choice == "1":
@@ -288,49 +264,38 @@ if __name__ == "__main__":
                             marker()
 
         elif choice == "4":
-            time, time2, dado = get_team_stat()
+            team, team2, stat = get_team_stat()
             underover = input("under or over: ")
-            linha = input("Type the number you wanna compare: ")
+            line = input("Type the number you wanna compare: ")
             marker()
-            nigger = ""
-            numerator = 0
-            if dado == "Tempo":
-                tempo = linha.split(" ")
-                for minuto in tempo:
-                    tempo1 = minuto.split(":")
-                    segundos = (int(tempo1[0]) * 60) + int(tempo1[1])
-                    if numerator < len(tempo):
-                        nigger = nigger + str(segundos) + " "
-                        numerator += 2
+            linetime = ""
+            numerator = 1
+            if stat == "Time":
+                time = line.split(" ")
+                for minute in time:
+                    time1 = minute.split(":")
+                    second = (int(time1[0]) * 60) + int(time1[1])
+                    if numerator < len(time):
+                        linetime = linetime + str(second) + " "
+                        numerator += 1
                     else:
-                        nigger = nigger + str(segundos)
-            for liga in LCK, LPL, LEC, LCS:
-                for team in liga:
-                    if time == team["name"]:
-                        if dado == "Tempo":
-                            poison(team, dado, nigger, underover)
-                            marker()
-                            poison_patch(team, dado, nigger, underover)
-                            marker()
+                        linetime = linetime + str(second)
+            for league in LCK, LPL, LEC, LCS:
+                for squad in league:
+                    if team == squad["name"]:
+                        if stat == "Time":
+                            relative_frequency(squad, stat, linetime, underover)
                         else:
-                            poison(team, dado, linha, underover)
-                            marker()
-                            poison_patch(team, dado, linha, underover)
-                            marker()
-            if time2:
-                for liga in LCK, LPL, LEC, LCS:
-                    for team in liga:
-                        if time2 == team["name"]:
-                            if dado == "Tempo":
-                                poison(team, dado, nigger, underover)
-                                marker()
-                                poison_patch(team, dado, nigger, underover)
-                                marker()
+                            relative_frequency(squad, stat, line, underover)
+            if team2:
+                for league in LCK, LPL, LEC, LCS:
+                    for squad in league:
+                        if team2 == squad["name"]:
+                            if stat == "Time":
+                                relative_frequency(squad, stat, linetime, underover)
                             else:
-                                poison(team, dado, linha, underover)
-                                marker()
-                                poison_patch(team, dado, linha, underover)
-                                marker()
+                                relative_frequency(squad, stat, line, underover)
+                                
 
         elif choice == "0":
             print(f"Closing... Goodbye {chr(0x2665)}")
