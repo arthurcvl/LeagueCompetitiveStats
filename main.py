@@ -150,10 +150,10 @@ def relative_frequency(team, stat, lines, overunder):
                 marker()
                 return None
     if overunder == "under" or overunder == "over":
-        l = lines.split(" ")
+        l = lines.strip().split(" ")
         for line in l:      
             try:
-                float(line)
+                line = float(line)
             except ValueError:
                 print("Please type the numbers of relative frequency")
                 marker()
@@ -172,7 +172,7 @@ def relative_frequency(team, stat, lines, overunder):
                     elif overunder == "under":
                         if team[game][stat] < line:
                             frequency.append(team[game][stat])
-                        percentage = round((len(frequency) / (len(team) - 1)) * 100, 1)
+                    percentage = round((len(frequency) / (len(team) - 1)) * 100, 1)
             if stat == "Time":
                 print("{} ({}:{}) - {}% of {} relative frequency \n".format(team["name"], int(minute), int(second), percentage, stat))
             else:
@@ -300,9 +300,12 @@ if __name__ == "__main__":
                 if stat == "Time":
                     seconds = ""
                     time = line.split(" ")
-                    for minute in time:
+                    for minute in time:  
                         time1 = minute.split(":")
-                        second = (int(time1[0]) * 60) + int(time1[1])
+                        try:    
+                            second = (int(time1[0]) * 60) + int(time1[1])
+                        except:
+                            second = int(time1[0]) * 60
                         if starternumber < len(time):
                             seconds = seconds + str(second) + " "
                             starternumber += 1
