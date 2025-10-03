@@ -4,9 +4,15 @@ import gdown
 from quixstreams import Application
 
 csvDataUrl = "https://drive.google.com/file/d/1v6LRphp2kYciU4SXp0PCjEMuev1bDejc/view?usp=sharing"
+
+brokerAddress = "localhost:9092"
+teamsTopicName = "data_producer.teams.team_created.json"
+matchesTopicName = "data_producer.matches.match_finished.json"
+
 tempFile = "tempFile.csv"
 newData = "newData.csv"
 oldData = "oldData.csv"
+
 teamKillsHeader = 33
 
 class Team:
@@ -14,9 +20,6 @@ class Team:
         self.teamId = teamId
         self.teamName = teamName
         self.teamLeague = teamLeague
-
-    def convertToJson(self):
-        return "zz"
 
     @staticmethod
     def teamExistsById(teamId, teams):
@@ -87,9 +90,15 @@ def createMatchIfNotExists(matchData: [], matches: []):
         except ValueError:
             return False
 
-def sendMessages(list):
-    for item in range(len(list)):
-        jsonArray[item] = json.dumps(item.__dict__)
+def sendMessages(list, topicName):
+    app = Application(broker_address = brokerAddress)
+
+    with app.get_producer() as producer:
+        for item in list:
+            producer.produce(
+                topic = topicName,
+                value = json.dumps(item.__dict__)
+            )
         
 #Se newData e oldData forem iguais é retornado falso
 def createFileWitouthDuplicates(newFileName, fileOneName, fileTwoName):
@@ -114,18 +123,7 @@ def createFileWitouthDuplicates(newFileName, fileOneName, fileTwoName):
 
 
 if __name__ == "__main__":
-    #Fazer download dos novos dados
-    retrieveNewCsvData(newData)
-
-    if not createFileWitouthDuplicates(tempFile, newData, oldData):
-        print("There is no new Data")
-        return False
-
-    newTeams = createList(tempFile, createTeamIfNotExists)
-    newMatches = createList(tempFile, createMatchIfNotExists)
-
-    prin
-    if newTeams.length < 0
+    
 
 #Cada jogo ser uma mensagem enternamente em um topic
 #Cada time ser uma mensagem enternamente em outro topic
