@@ -38,3 +38,23 @@ no banco de dados
 # kills é a soma de teamkills com teamdeaths
 # todos dados seguem a esttrutura do acima
 # para verificar se a partida ja esta salva precisa testar o id dela e o id do time
+
+
+class Match:
+    def __init__(self, matchTag, matchLeague, split, date, 
+                teamName, teamId, matchDuration, result, 
+                kills, dragons, towers) :
+        this.name = "match"
+
+
+matchTag = 0
+matchLeague = 3
+split = 5
+date = 7
+teamName = 15
+teamId = 16
+matchDuration = 28
+result = 29
+kills = 33 (teamkills) + 34 (teamdeaths)
+dragons = 46 (owndragons) + 47(oppdragons)
+towers = 70(owntowers) + 71(opptowers)

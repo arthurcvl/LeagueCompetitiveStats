@@ -114,5 +114,5 @@ def createFileWitouthDuplicates(newFileName, fileOneName, fileTwoName):
 if __name__ == "__main__":
     #Começo do processo puxando novos dados do drive e jogando no file newData.csv
     #retrieveNewData()
-    
+    print("Hi")
 
