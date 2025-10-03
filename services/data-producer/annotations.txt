@@ -33,6 +33,18 @@ no banco de dados
 
 // na hora de persistir as partidas no banco de dados, eu separo elas do time e dou .save ?
 '''
+#Cada jogo ser uma mensagem enternamente em um topic
+#Cada time ser uma mensagem enternamente em outro topic
+#O jogo tem que ser o responsavel por guardar uma mensagem para o time
+#A leitura e o recebimento das mensagens do time tem que sempre acontecer antes do que a dos jogos
+#Meu medo no caso é um jogo ter a referencia de um time que ainda nao foi criado, mas vou deixar pra pensar
+#nesse problema depois
+
+#Reader of a given partition consumes messages in the order they are published
+
+#O jogo tem uma PK composta, nela vai ter o id do jogo (que nao é unico) e a PK do time a qual pertence esse jogo
+
+
 
 # NA VERDADE OS DADOS SAO POR PARTICIPANTE PQP
 # kills é a soma de teamkills com teamdeaths

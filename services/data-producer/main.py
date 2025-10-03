@@ -26,10 +26,7 @@ class Team:
     def teamExistsById(teamId, teams):
         for team in teams:
             if(team.teamId == teamId): return team
-        #Se não encontrar time return false
-        #Pra que eu comentei isso, LMAO
 
-#A match vai ter uma tag e um id proprio, vai dar pra ver o outro lado do "TeamMatch" pela tag
 class Match:
     def __init__(self, matchId: str, matchLeague: str, split: str, date: str, teamName: str, teamId: str, matchDuration: int, result: int, kills: int, dragons: int, towers: int):
         
@@ -47,7 +44,7 @@ class Match:
 
     @staticmethod
     def matchExistsInList(matchId, teamId, matches: []):
-        #procura na lista se ja esta la, se esta retorna algo, se nao retorna nada
+        #search in list, if is return the match, if not return nothing, this is useful to if
         for match in matches:
             if(match.matchId == matchId and match.teamId == teamId): return match
 
@@ -101,7 +98,7 @@ def sendMessages(list, topicName):
                 value = json.dumps(item.__dict__)
             )
         
-#Se newData e oldData forem iguais é retornado falso
+#If newData and oldData are equals return false
 def createFileWitouthDuplicates(newFileName, fileOneName, fileTwoName):
     linesFile1 = set()
     with open(fileOneName, "r", encoding="utf-8") as tempFile:
@@ -123,7 +120,7 @@ def createFileWitouthDuplicates(newFileName, fileOneName, fileTwoName):
     return True
 
 def main():
-    #Fazer download dos novos dados 
+    #Download new data
     retrieveNewCsvData(newData) 
 
     if not createFileWitouthDuplicates(tempFile, newData, oldData): 
@@ -151,14 +148,3 @@ def main():
 
 if __name__ == "__main__":
     main()    
-
-#Cada jogo ser uma mensagem enternamente em um topic
-#Cada time ser uma mensagem enternamente em outro topic
-#O jogo tem que ser o responsavel por guardar uma mensagem para o time
-#A leitura e o recebimento das mensagens do time tem que sempre acontecer antes do que a dos jogos
-#Meu medo no caso é um jogo ter a referencia de um time que ainda nao foi criado, mas vou deixar pra pensar
-#nesse problema depois
-
-#Reader of a given partition consumes messages in the order they are published
-
-#O jogo tem uma PK composta, nela vai ter o id do jogo (que nao é unico) e a PK do time a qual pertence esse jogo
