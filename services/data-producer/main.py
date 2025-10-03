@@ -1,7 +1,12 @@
 import time
 import json
+import gdown
+from quixstreams import Application
 
-
+csvDataUrl = "https://drive.google.com/file/d/1v6LRphp2kYciU4SXp0PCjEMuev1bDejc/view?usp=sharing"
+tempFile = "tempFile.csv"
+newData = "newData.csv"
+oldData = "oldData.csv"
 teamKillsHeader = 33
 
 class Team:
@@ -22,9 +27,9 @@ class Team:
 
 #A match vai ter uma tag e um id proprio, vai dar pra ver o outro lado do "TeamMatch" pela tag
 class Match:
-    def __init__(self, matchTag: str, matchLeague: str, split: str, date: str, teamName: str, teamId: str, matchDuration: int, result: int, kills: int, dragons: int, towers: int):
+    def __init__(self, matchId: str, matchLeague: str, split: str, date: str, teamName: str, teamId: str, matchDuration: int, result: int, kills: int, dragons: int, towers: int):
         
-        self.matchTag = matchTag
+        self.matchId = matchId
         self.matchLeague = matchLeague
         self.split = split
         self.date = date
@@ -37,15 +42,17 @@ class Match:
         self.towers = towers
 
     @staticmethod
-    def matchExistsInList(matchTag, teamId, matches: []):
+    def matchExistsInList(matchId, teamId, matches: []):
         #procura na lista se ja esta la, se esta retorna algo, se nao retorna nada
         for match in matches:
-            if(match.matchTag == matchTag and match.teamId == teamId): return match
+            if(match.matchId == matchId and match.teamId == teamId): return match
 
+def retrieveNewCsvData(outputFilename):
+    gdown.download(csvDataUrl, outputFilename, quiet=False, fuzzy=True)
              
-def createList(methodCall):
+def createList(filename, methodCall):
     list = []
-    with open("2025_LoL_esports_match_data_from_OraclesElixir.csv", "r", encoding="utf-8") as file:
+    with open(filename, "r", encoding="utf-8") as file:
         #ignores the first line, that is the header of the file
         file.readline()
 
@@ -80,17 +87,11 @@ def createMatchIfNotExists(matchData: [], matches: []):
         except ValueError:
             return False
 
-def retrieveNewData():
-    url = "https://drive.google.com/drive/u/1/folders/1gLSw0RLjBbtaNy0dgnGQDAZOHIgCe-HH"
-    output = "newData.csv"
-    gdown.download(url, output)
-
-def createJsonFile(list):
-    jsonArray = []
+def sendMessages(list):
     for item in range(len(list)):
         jsonArray[item] = json.dumps(item.__dict__)
-    return jsonArray
         
+#Se newData e oldData forem iguais é retornado falso
 def createFileWitouthDuplicates(newFileName, fileOneName, fileTwoName):
     linesFile1 = set()
     with open(fileOneName, "r", encoding="utf-8") as tempFile:
@@ -109,10 +110,30 @@ def createFileWitouthDuplicates(newFileName, fileOneName, fileTwoName):
     with open(newFileName, "w", encoding="utf-8") as tempFile:
         for line in uniqueLines:
             tempFile.write(line + "\n")
+    return True
 
 
 if __name__ == "__main__":
-    #Começo do processo puxando novos dados do drive e jogando no file newData.csv
-    #retrieveNewData()
-    print("Hi")
+    #Fazer download dos novos dados
+    retrieveNewCsvData(newData)
 
+    if not createFileWitouthDuplicates(tempFile, newData, oldData):
+        print("There is no new Data")
+        return False
+
+    newTeams = createList(tempFile, createTeamIfNotExists)
+    newMatches = createList(tempFile, createMatchIfNotExists)
+
+    prin
+    if newTeams.length < 0
+
+#Cada jogo ser uma mensagem enternamente em um topic
+#Cada time ser uma mensagem enternamente em outro topic
+#O jogo tem que ser o responsavel por guardar uma mensagem para o time
+#A leitura e o recebimento das mensagens do time tem que sempre acontecer antes do que a dos jogos
+#Meu medo no caso é um jogo ter a referencia de um time que ainda nao foi criado, mas vou deixar pra pensar
+#nesse problema depois
+
+#Reader of a given partition consumes messages in the order they are published
+
+#O jogo tem uma PK composta, nela vai ter o id do jogo (que nao é unico) e a PK do time a qual pertence esse jogo
