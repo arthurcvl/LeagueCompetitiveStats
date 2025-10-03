@@ -1,4 +1,5 @@
 import time
+import os
 import json
 import gdown
 from quixstreams import Application
@@ -121,9 +122,35 @@ def createFileWitouthDuplicates(newFileName, fileOneName, fileTwoName):
             tempFile.write(line + "\n")
     return True
 
+def main():
+    #Fazer download dos novos dados 
+    retrieveNewCsvData(newData) 
+
+    if not createFileWitouthDuplicates(tempFile, newData, oldData): 
+        print("There is no new Data") 
+        return False 
+
+    newTeams = createList(tempFile, createTeamIfNotExists) 
+    newMatches = createList(tempFile, createMatchIfNotExists) 
+
+    if len(newTeams) > 0: 
+        sendMessages(newTeams, teamsTopicName) 
+
+    if len(newMatches) > 0: 
+        sendMessages(newMatches, matchesTopicName)
+
+    #Deletes all data inside oldData
+    open(newData, 'w').close()
+
+    #Swap newData -> oldData and oldData -> newData
+    os.rename(newData, 'temp')
+    os.rename(oldData, newData)
+    os.rename('temp', oldData)
+
+
 
 if __name__ == "__main__":
-    
+    main()    
 
 #Cada jogo ser uma mensagem enternamente em um topic
 #Cada time ser uma mensagem enternamente em outro topic
