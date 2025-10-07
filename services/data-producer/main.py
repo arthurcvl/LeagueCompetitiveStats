@@ -144,7 +144,16 @@ def main():
     os.rename(oldData, newData)
     os.rename('temp', oldData)
 
+def test():
+    if not createFileWitouthDuplicates(tempFile, newData, oldData): 
+        print("There is no new Data") 
+        return False 
+
+    newTeams = createList(tempFile, createTeamIfNotExists) 
+
+    if len(newTeams) > 0: 
+        sendMessages(newTeams, teamsTopicName) 
 
 
 if __name__ == "__main__":
-    main()    
+    test()
