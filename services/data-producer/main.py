@@ -28,13 +28,12 @@ class Team:
             if(team.teamId == teamId): return team
 
 class Match:
-    def __init__(self, matchId: str, matchLeague: str, split: str, date: str, teamName: str, teamId: str, matchDuration: int, result: int, kills: int, dragons: int, towers: int):
+    def __init__(self, matchId: str, matchLeague: str, split: str, date: str, teamId: str, matchDuration: int, result: int, kills: int, dragons: int, towers: int):
         
         self.matchId = matchId
         self.matchLeague = matchLeague
         self.split = split
         self.date = date
-        self.teamName = teamName
         self.teamId = teamId
         self.matchDuration = matchDuration
         self.result = result
@@ -78,13 +77,12 @@ def createMatchIfNotExists(matchData: [], matches: []):
             matchLeague = matchData[3]
             split = matchData[5]
             date = matchData[7]
-            teamName = matchData[15]
             matchDuration = int(matchData[28])
             result = int(matchData[29])
             kills = int(matchData[33]) + int(matchData[34])
             dragons = int(matchData[46]) + int(matchData[47])
             towers =  int(matchData[70]) + int(matchData[71])
-            matches.append(Match(matchTag, matchLeague, split, date, teamName, teamId, matchDuration, result, kills, dragons, towers))
+            matches.append(Match(matchTag, matchLeague, split, date, teamId, matchDuration, result, kills, dragons, towers))
         except ValueError:
             return False
 
