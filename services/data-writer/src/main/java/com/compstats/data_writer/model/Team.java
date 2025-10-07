@@ -37,10 +37,7 @@ public class Team {
         this.teamLeague = teamLeague;
     }
 
-    public Team(String teamId, String teamName, String teamLeague) {
-        this.teamId = teamId;
-        this.teamName = teamName;
-        this.teamLeague = teamLeague;
+    public Team() {
     }
 }
 

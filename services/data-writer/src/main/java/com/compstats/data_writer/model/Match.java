@@ -31,6 +31,9 @@ public class Match {
 
     private Integer towers;
 
+    public Match() {
+    }
+
     public String getMatchId() {
         return matchId;
     }

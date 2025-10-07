@@ -7,6 +7,9 @@ public class MatchPK implements Serializable {
     private String matchId;
     private String teamId;
 
+    public MatchPK() {
+    }
+
     public String getMatchId() {
         return matchId;
     }
