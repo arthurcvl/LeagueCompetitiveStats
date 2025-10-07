@@ -1,2 +1,11 @@
-spring.application.name=data-writer
-spring.kafka.bootstrap-servers=localhost:9092
+spring:
+  application:
+    name: data-writer
+  kafka:
+    bootstrap-servers: localhost:9092
+
+  datasource:
+    url: jdbc:h2:mem:db?createDatabaseIfNotExist=true
+    username: sa
+    password:
+
