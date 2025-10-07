@@ -15,13 +15,19 @@ public class KafkaMessageListener {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    MatchRepository matchRepository;
+
+    @Autowired
+    TeamRepository teamRepository;
+
     @KafkaListener(
             topics = "data_producer.teams.team_created.json",
             groupId = "test"
     )
     void listenTeams(String message) throws JsonProcessingException {
         Team team = objectMapper.readValue(message, Team.class);
-        System.out.println(team.getTeamId() + " - " + team.getTeamName() + " - " + team.getTeamLeague());
+        teamRepository.save(team);
     }
 
     @KafkaListener(
@@ -30,6 +36,6 @@ public class KafkaMessageListener {
     )
     void listenMatches(String message) throws JsonProcessingException {
         Match match = objectMapper.readValue(message, Match.class);
-        System.out.println(match);
+        matchRepository.save(match);
     }
 }
