@@ -43,7 +43,8 @@ public class Match {
 
      */
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("teamId")
     @JoinColumn(name = "team_id", nullable = false)
     @JsonBackReference
     private Team team;

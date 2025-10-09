@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class TeamRepositoryCustomImp implements TeamRepositoryCustom {
+public class TeamRepositoryCustomImpl implements TeamRepositoryCustom {
 
     @PersistenceContext
     private EntityManager entityManager;
