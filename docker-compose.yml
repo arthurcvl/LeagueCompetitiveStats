@@ -1,0 +1,9 @@
+services:
+  pg-data:
+    image: postgres:18.0
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      
