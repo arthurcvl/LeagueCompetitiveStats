@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: data-writer
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/leaguedb
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto:
+    database: POSTGRESQL
+
