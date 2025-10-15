@@ -4,7 +4,7 @@ Este projeto tem como objetivo fornecer estatísticas competitivas para o jogo L
 
 ## Funcionalidades
 
-- Consulta de estatísticas de jogadores e times
+- Consulta de estatísticas de times
 - Visualização de partidas e resultados
 - Análise de desempenho competitivo
 
