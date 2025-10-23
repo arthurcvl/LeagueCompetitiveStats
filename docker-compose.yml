@@ -6,4 +6,29 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
+      POSTGRES_DB: leaguedb
+  data-writer:
+    build:
+      context: services/data-writer 
+      dockerfile: Dockerfile
+    depends_on:
+      - pg-data
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-data:5432/leaguedb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+  data-api:
+    build: 
+      context: services/data-api
+      dockerfile: Dockerfile
+    depends_on:
+      - pg-data
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-data:5432/leaguedb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+
       
+

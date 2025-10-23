@@ -21,8 +21,7 @@ import java.util.Map;
 @Configuration
 public class KafkaConsumerConfig {
 
-    @Value("${spring.kafka.bootstrap-servers}")
-    private String bootstrapServers;
+    private String bootstrapServers = "host.docker.internal:9092";
 
     public Map<String, Object> configs(){
         Map<String, Object> configsMap = new HashMap<>();
