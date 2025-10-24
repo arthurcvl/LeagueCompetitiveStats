@@ -6,7 +6,19 @@ from quixstreams import Application
 
 csvDataUrl = "https://drive.google.com/file/d/1v6LRphp2kYciU4SXp0PCjEMuev1bDejc/view?usp=sharing"
 
-brokerAddress = "localhost:9092"
+'''matchTag = 0
+matchLeague = 3
+split = 5
+date = 7
+teamName = 15
+teamId = 16
+matchDuration = 28
+result = 29
+kills = 33 (teamkills) + 34 (teamdeaths)
+dragons = 46 (owndragons) + 47(oppdragons)
+towers = 70(owntowers) + 71(opptowers)'''
+
+brokerAddress = "kafka:9092"
 teamsTopicName = "data_producer.teams.team_created.json"
 matchesTopicName = "data_producer.matches.match_finished.json"
 
