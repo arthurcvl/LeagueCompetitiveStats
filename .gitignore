@@ -5,4 +5,4 @@ __pycache__/lcs.cpython-312.pyc
 __pycache__/lec.cpython-312.pyc
 __pycache__/lpl.cpython-312.pyc
 __pycache__/
-lolstatsbotvenv/
+services/data-producer/venv/
