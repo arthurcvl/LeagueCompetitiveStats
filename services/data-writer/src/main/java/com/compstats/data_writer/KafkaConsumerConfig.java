@@ -21,7 +21,8 @@ import java.util.Map;
 @Configuration
 public class KafkaConsumerConfig {
 
-    private String bootstrapServers = "host.docker.internal:9092";
+    @Value("${kafka.bootstrap-servers}")
+    private String bootstrapServers;
 
     public Map<String, Object> configs(){
         Map<String, Object> configsMap = new HashMap<>();
@@ -37,7 +38,7 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> container(ConsumerFactory<String, String> consumerFactory){
+    KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory(ConsumerFactory<String, String> consumerFactory){
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
         return factory;
