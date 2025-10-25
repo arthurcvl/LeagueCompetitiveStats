@@ -1,5 +1,4 @@
 spring:
-  application:
-    name: data-writer
-
-
+  profiles:
+    active: dev
+    #Reminder: this specific config is overridden in docker-compose.yml

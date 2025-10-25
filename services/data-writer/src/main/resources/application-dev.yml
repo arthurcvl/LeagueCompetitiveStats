@@ -1,0 +1,14 @@
+#a bad thing about this dev profile is that you need to run kafka by yourself
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+kafka:
+  bootstrap-servers: localhost:9092
+
+
