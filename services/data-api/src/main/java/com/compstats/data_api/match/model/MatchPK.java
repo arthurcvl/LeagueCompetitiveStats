@@ -3,20 +3,11 @@ package com.compstats.data_api.match.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter
+@NoArgsConstructor
 public class MatchPK implements Serializable {
     private String matchId;
     private String teamId;
-
-    public MatchPK() {
-    }
-
-    public String getMatchId() {
-        return matchId;
-    }
-
-    public String getTeamId() {
-        return teamId;
-    }
 
     @Override
     public boolean equals(Object o) {
