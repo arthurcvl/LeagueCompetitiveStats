@@ -16,7 +16,10 @@ matchDuration = 28
 result = 29
 kills = 33 (teamkills) + 34 (teamdeaths)
 dragons = 46 (owndragons) + 47(oppdragons)
-towers = 70(owntowers) + 71(opptowers)'''
+towers = 70(owntowers) + 71(opptowers)
+side = 11
+playoff = 6
+'''
 
 brokerAddress = "kafka:9092"
 teamsTopicName = "data_producer.teams.team_created.json"
@@ -39,25 +42,38 @@ class Team:
         for team in teams:
             if(team.teamId == teamId): return team
 
+class TeamMatch:
+    def __init__(self, matchId: str, teamId: str, teamKills: int, teamDragons: int, teamTowers: int, result: int, teamSide: str):
+        self.matchId = matchId
+        self.teamId = teamId
+        self.teamKills = teamKills
+        self.teamDragons = teamDragons
+        self.teamTowers = teamTowers
+        self.result = result
+        self.teamSide = teamSide
+        self.result = result
+
+    @staticmethod
+    def teamMatchExistsInList(matchId, teamId, matches: []):
+        #search in list, if is return the match, if not return nothing, this is useful to if
+        for match in matches:
+            if(match.matchId == matchId and match.teamId == teamId): return match
+
 class Match:
-    def __init__(self, matchId: str, matchLeague: str, split: str, date: str, teamId: str, matchDuration: int, result: int, kills: int, dragons: int, towers: int):
+    def __init__(self, matchId: str, matchLeague: str, split: str, date: str, matchDuration: int, playoff: int):
         
         self.matchId = matchId
         self.matchLeague = matchLeague
         self.split = split
         self.date = date
-        self.teamId = teamId
         self.matchDuration = matchDuration
-        self.result = result
-        self.kills = kills
-        self.dragons = dragons
-        self.towers = towers
+        self.playoff = playoff
 
     @staticmethod
-    def matchExistsInList(matchId, teamId, matches: []):
+    def matchExistsInList(matchId, matches: []):
         #search in list, if is return the match, if not return nothing, this is useful to if
         for match in matches:
-            if(match.matchId == matchId and match.teamId == teamId): return match
+            if(match.matchId == matchId): return match
 
 def retrieveNewCsvData(outputFilename):
     gdown.download(csvDataUrl, outputFilename, quiet=False, fuzzy=True)
