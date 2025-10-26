@@ -1,24 +1,55 @@
+#data-producer is not included in this docker compose as its life cicle is independent from the rest of the services
+
 services:
   pg-data:
-    image: postgres:18.0
+    image: postgres:15
     ports:
       - 5432:5432
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
       POSTGRES_DB: leaguedb
+    volumes:
+      - pg-data-volume:/var/lib/postgresql/data
+    networks:
+      - rede-global
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    environment:
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:9093'
+      KAFKA_LISTENERS: 'PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      KAFKA_CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    networks:
+      - rede-global
   data-writer:
     build:
       context: services/data-writer 
       dockerfile: Dockerfile
     depends_on:
       - pg-data
+      - kafka
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://pg-data:5432/leaguedb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_PROFILES_ACTIVE: prod
+    networks:
+      - rede-global
   data-api:
-    build: 
+    build:
       context: services/data-api
       dockerfile: Dockerfile
     depends_on:
@@ -29,6 +60,15 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://pg-data:5432/leaguedb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    networks:
+      - rede-global
 
-      
+volumes:
+  pg-data-volume:
+
+networks:
+  rede-global:
+    external: true
+
 
