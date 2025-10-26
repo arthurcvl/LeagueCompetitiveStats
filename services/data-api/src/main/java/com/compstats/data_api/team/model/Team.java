@@ -1,5 +1,8 @@
-package com.compstats.data_writer.model;
+package com.compstats.data_api.team.model;
 
+import com.compstats.data_api.match.model.TeamMatch;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -21,5 +24,6 @@ public class Team {
     private String teamLeague;
 
     @OneToMany(mappedBy = "team")
-    private List<TeamMatch> teamMatch;
+    @JsonManagedReference
+    private List<TeamMatch> teamMatches;
 }

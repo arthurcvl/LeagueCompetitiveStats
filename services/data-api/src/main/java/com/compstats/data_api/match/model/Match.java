@@ -29,5 +29,6 @@ public class Match {
     private int playoff;
 
     @OneToMany(mappedBy = "match")
+    @JsonManagedReference 
     private List<TeamMatch> teamMatch;
 }
