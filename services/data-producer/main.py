@@ -4,6 +4,8 @@ import json
 import gdown
 from quixstreams import Application
 
+#TODO -> Remove magic numbers
+
 csvDataUrl = "https://drive.google.com/file/d/1v6LRphp2kYciU4SXp0PCjEMuev1bDejc/view?usp=sharing"
 
 '''matchTag = 0
@@ -23,6 +25,7 @@ playoff = 6
 
 brokerAddress = "kafka:9092"
 teamsTopicName = "data_producer.teams.team_created.json"
+teamMatchesTopicName = "data_producer.teamMatches.teamMatch_finished.json"
 matchesTopicName = "data_producer.matches.match_finished.json"
 
 tempFile = "tempFile.csv"
@@ -51,7 +54,6 @@ class TeamMatch:
         self.teamTowers = teamTowers
         self.result = result
         self.teamSide = teamSide
-        self.result = result
 
     @staticmethod
     def teamMatchExistsInList(matchId, teamId, matches: []):
@@ -92,25 +94,38 @@ def createList(filename, methodCall):
 
 def createTeamIfNotExists(teamData: [], teams: []):
     teamId = teamData[16]
+    if not teamId: return False
     if not Team.teamExistsById(teamId, teams):
         teamName = teamData[15]
         teamLeague = teamData[3]
         teams.append(Team(teamId, teamName, teamLeague))
 
+def createTeamMatchIfNotExists(teamMatchData: [], teamMatches: []):
+    matchId = teamMatchData[0]
+    teamId = teamMatchData[16]
+    if not teamId or not matchId: return False
+    if not TeamMatch.teamMatchExistsInList(matchId, teamId, teamMatches):
+        try:
+            kills = int(teamMatchData[33])
+            dragons = int(teamMatchData[46])
+            towers =  int(teamMatchData[70])
+            result = int(teamMatchData[29])
+            side = teamMatchData[11]
+            teamMatches.append(TeamMatch(matchId, teamId, kills, dragons, towers, result, side))
+        except ValueError:
+            return False
+        
 def createMatchIfNotExists(matchData: [], matches: []):
-    matchTag = matchData[0]
-    teamId = matchData[16]
-    if not Match.matchExistsInList(matchTag, teamId, matches):
+    matchId = matchData[0]
+    if not matchId: return False
+    if not Match.matchExistsInList(matchId, matches):
         try:
             matchLeague = matchData[3]
             split = matchData[5]
             date = matchData[7]
             matchDuration = int(matchData[28])
-            result = int(matchData[29])
-            kills = int(matchData[33]) + int(matchData[34])
-            dragons = int(matchData[46]) + int(matchData[47])
-            towers =  int(matchData[70]) + int(matchData[71])
-            matches.append(Match(matchTag, matchLeague, split, date, teamId, matchDuration, result, kills, dragons, towers))
+            playoff = int(matchData[6])
+            matches.append(Match(matchId, matchLeague, split, date, matchDuration, playoff))
         except ValueError:
             return False
 
@@ -175,11 +190,20 @@ def test():
         print("There is no new Data") 
         return False 
 
-    newTeams = createList(tempFile, createTeamIfNotExists) 
+    lmeow = createList(tempFile, createTeamIfNotExists)
 
-    if len(newTeams) > 0: 
-        sendMessages(newTeams, teamsTopicName) 
+    if len(lmeow) > 0:
+        sendMessages(lmeow, teamsTopicName)
 
+    nyah = createList(tempFile, createMatchIfNotExists)
+
+    if len(nyah) > 0:
+        sendMessages(nyah, matchesTopicName)
+
+    newTeamsMatch = createList(tempFile, createTeamMatchIfNotExists)
+
+    if len(newTeamsMatch) > 0:
+        sendMessages(newTeamsMatch, teamMatchesTopicName)
 
 if __name__ == "__main__":
     test()
