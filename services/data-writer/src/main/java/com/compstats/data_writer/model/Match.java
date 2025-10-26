@@ -21,8 +21,10 @@ public class Match {
     private String split;
 
     private String date;
-
+        
     private Integer matchDuration;
+
+    private int playoff;
 
     @OneToMany(mappedBy = "match")
     private List<TeamMatch> teamMatch;

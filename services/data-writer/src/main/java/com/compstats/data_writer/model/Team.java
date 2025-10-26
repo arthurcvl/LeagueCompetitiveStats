@@ -1,11 +1,13 @@
 package com.compstats.data_writer.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,5 +23,5 @@ public class Team {
     private String teamLeague;
 
     @OneToMany(mappedBy = "team")
-    private List<TeamMatch> teamMatch;
+    private List<TeamMatch> teamMatches = new ArrayList<>();
 }
