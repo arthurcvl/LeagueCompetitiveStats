@@ -13,6 +13,7 @@ public class JsonConfig {
     public ObjectMapper objectMapper() {
         var objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
+        //TODO -> when dealing with date remind this
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         return objectMapper;
     }
