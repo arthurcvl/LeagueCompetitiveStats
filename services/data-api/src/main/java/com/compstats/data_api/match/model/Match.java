@@ -1,5 +1,7 @@
-package com.compstats.data_writer.model;
+package com.compstats.data_api.match.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -23,6 +25,8 @@ public class Match {
     private String date;
 
     private Integer matchDuration;
+
+    private int playoff;
 
     @OneToMany(mappedBy = "match")
     private List<TeamMatch> teamMatch;

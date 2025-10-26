@@ -190,15 +190,15 @@ def test():
         print("There is no new Data") 
         return False 
 
-    lmeow = createList(tempFile, createTeamIfNotExists)
+    newTeams = createList(tempFile, createTeamIfNotExists)
 
-    if len(lmeow) > 0:
-        sendMessages(lmeow, teamsTopicName)
+    if len(newTeams) > 0:
+        sendMessages(newTeams, teamsTopicName)
 
-    nyah = createList(tempFile, createMatchIfNotExists)
+    newMatches = createList(tempFile, createMatchIfNotExists)
 
-    if len(nyah) > 0:
-        sendMessages(nyah, matchesTopicName)
+    if len(newMatches) > 0:
+        sendMessages(newMatches, matchesTopicName)
 
     newTeamsMatch = createList(tempFile, createTeamMatchIfNotExists)
 
