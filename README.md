@@ -8,19 +8,8 @@ Este projeto tem como objetivo fornecer estatísticas competitivas para o jogo L
 - Visualização de partidas e resultados
 - Análise de desempenho competitivo
 
-## Como usar
+## Fase Atual de Desenvolvimento
 
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/arthurcvl/LeagueCompetitiveStats.git
-   ```
-2. Instale as dependências conforme sua linguagem de preferência.
-3. Execute o projeto conforme instruções do diretório principal.
+O projeto conta com o Back End praticamente pronto, no momento meu foco é em fazer um Site visualmente agradavel e que seja rico em informações. Para isso eu estou usando VueJS + Quasar.
 
-## Contribuição
 
-Contribuições são bem-vindas! Abra uma issue ou envie um pull request.
-
-## Licença
-
-Este projeto está sob licença MIT.
